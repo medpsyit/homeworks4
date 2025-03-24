@@ -1,6 +1,11 @@
 ﻿#include <iostream>
+#include <future>
 #include <vector>
 #include <random>
+
+void increm(int& value) {
+	value++;
+}
 
 void gen_elems(std::vector<int>& test, int elems) {
 	std::mt19937 gen;
@@ -9,30 +14,36 @@ void gen_elems(std::vector<int>& test, int elems) {
 	std::generate(test.begin(), test.end(), rand_num);
 }
 
+void paral_for_each(std::vector<int>::iterator begin, std::vector<int>::iterator end, void (*f)(int&)) {
+	if (end - begin < 10) {
+		std::for_each(begin, end, f);
+	}
+	else {
+		auto size = end - begin;
+		int half = static_cast<int> (size / 2);
+		std::future<void> a_f{ std::async(std::launch::async, paral_for_each, begin, (begin + half), std::ref(f)) };
+		std::future<void> d_f{ std::async(std::launch::deferred, paral_for_each, (begin + half), end, std::ref(f)) };
+		a_f.wait();
+		d_f.wait();
+	}
+}
 
 int main()
 {
-    std::vector<int> test(1'425'657);
+    std::vector<int> test(144);
 	gen_elems(test, 1'000);
 
-    int chunk{ 10 };
-	/*do {
-		if ((test.size() % chunk) == 0) {
-			std::cout << "Chunk is " << chunk << std::endl;
-		}
-		else {
-			std::cout << "No" << std::endl;
-			chunk--;
-		}
-	} while (!(test.size() % chunk == 0));*/
-
-	while (!(test.size() % chunk == 0)) {
-		chunk--;
+	for (const auto& e : test) {
+		std::cout << e << ' ';
 	}
+	std::cout << "\n\n" << std::endl;
 
-	size_t t = test.size() / 3;
-	std::cout << "OUT WHILE CHUNK IS " << chunk << std::endl;
-	std::cout << "VECTOR / CHUNK = " << t << " elems" << std::endl;
+	paral_for_each(test.begin(), test.end(), &increm);
+
+	for (const auto& e : test) {
+		std::cout << e << ' ';
+	}
+	std::cout << std::endl;
 
     return 0;
 }
