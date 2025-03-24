@@ -8,8 +8,8 @@
 - [Задание 2](https://github.com/medpsyit/homeworks4/blob/main/2/Homework2_2/Homework2_2.cpp)
 - [Задание 3](https://github.com/medpsyit/homeworks4/blob/main/2/Homework2_3/Homework2_3.cpp)
 ## [Урок 3](3):
-- [Задание 1]()
-- [Задание 2]()
+- [Задание 1](https://github.com/medpsyit/homeworks4/blob/main/3/Homework3_1/Homework3_1.cpp)
+- [Задание 2](https://github.com/medpsyit/homeworks4/blob/main/3/Homework3_2/Homework3_2.cpp)
 
 ## [Урок 5](5):
 - [Задание 1]()
