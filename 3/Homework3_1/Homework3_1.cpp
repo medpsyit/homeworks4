@@ -4,40 +4,42 @@
 #include <list>
 #include <chrono>
 
-void selection_sort_list(std::list<int>& list, std::promise<int>& min) {
+void min_search(std::list<int>& list, std::list<int>::iterator start, std::list<int>::iterator s, std::promise<std::list<int>::iterator>& m) {
+    for (auto it = start; it != list.end(); it++) {
+        if (*s > *it) {
+            s = it;
+        }
+    }
+    m.set_value(s);
+}
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+void selection_sort_list(std::list<int>& list) {
 
     std::list<int>::iterator b{ list.begin() }, e{ list.end() };
     --e;
     for (auto iter = list.begin(); iter != e; iter++)
     {
+        std::promise<std::list<int>::iterator> m{};
+        std::future<std::list<int>::iterator> f{ m.get_future() };
+
         std::list<int>::iterator s{ b };
 
-        for (auto it = b; it != list.end(); it++) {
-            if (*s > *it) {
-                s = it;
-            }
-        }
+        std::future<void> f_m{ std::async(std::launch::async, min_search, std::ref(list), b, s, std::ref(m)) };
+
+        s = f.get();
+
         std::iter_swap(b, s);
         b++;
     }
-
-    min.set_value(list.front());
 }
 
 int main()
 {
     std::list<int> test{ 5,8,2,4,0,2,8,6,1 };
 
-    std::promise<int> prom{};
-    std::future<int> fut{ prom.get_future() };
+    selection_sort_list(test);
 
-    auto tf{ std::async(std::launch::async, selection_sort_list, std::ref(test), std::ref(prom)) };
-
-    std::cout << "MIN is " /*<< fut.get() << std::endl*/;
-
-    std::cout << /*"MIN is " << */fut.get() << std::endl;
+    std::cout << "MIN is " << test.front() << std::endl;
 
     return 0;
 }
