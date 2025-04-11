@@ -11,9 +11,4 @@
 - [Задание 1](https://github.com/medpsyit/homeworks4/blob/main/3/Homework3_1/Homework3_1.cpp)
 - [Задание 2](https://github.com/medpsyit/homeworks4/blob/main/3/Homework3_2/Homework3_2.cpp)
 
-## [Урок 5](5):
-- [Задание 1]()
-- [Задание 2]()
-- [Задание 3]()
-
-## [Курсовой проект]()
+## [Курсовой проект](https://github.com/medpsyit/homeworks4/blob/main/Diploma/Diploma/Diploma.cpp)
